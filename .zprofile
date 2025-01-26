@@ -3,6 +3,7 @@ eval "$(oh-my-posh init zsh --config /Users/aisha/.config/oh-my-posh-theme/kusha
 
 HISTFILE=$HOME/.zsh_history      
 SAVEHIST=100000 
+HISTSIZE=5000
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=yellow,fg=black,bold'
 
 export PATH="$HOME/google-cloud-sdk/bin:$PATH"

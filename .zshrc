@@ -4,18 +4,48 @@ function safe_source() {
   [ -f "$1" ] && source "$1"
 }
 
+function copyfile {
+  local file="${1}"
+  [[ $file = /* ]] || file="$PWD/$file"
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    cat "$file" | pbcopy
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    cat "$file" | xclip -selection clipboard
+  fi
+
+  echo "Contents of ${file} copied to clipboard."
+}
+
+function copypath {
+  local file="${1:-.}"
+  [[ $file = /* ]] || file="$PWD/$file"
+
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    print -n "${file:a}" | pbcopy
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    echo -n "${file:a}" | xclip -selection clipboard
+  fi
+  echo "Absolute path ${file:a} copied to clipboard."
+}
+
+
 safe_source $HOME/.zprofile
 
-if [ ! -d $HOME/.zsh/plugins ]; then 
-  mkdir -p $HOME/.zsh && cd $HOME/.zsh
-  git clone  --filter=blob:none --no-checkout https://github.com/Aisha630/configs.git .
-  git sparse-checkout init --cone
-  git sparse-checkout set plugins
-  git checkout main
-fi
+# if [ ! -d $HOME/.zsh/plugins ]; then 
+#   mkdir -p $HOME/.zsh && cd $HOME/.zsh
+#   git clone  --filter=blob:none --no-checkout https://github.com/Aisha630/configs.git .
+#   git sparse-checkout init --cone
+#   git sparse-checkout set plugins
+#   git checkout main
+# fi
 
 # the readme for this plugin says to source it before other plugins
 safe_source $HOME/.zsh/plugins/ez-compinit/ez-compinit.plugin.zsh
+
+eval "$(fzf --zsh)"
+zstyle ":fzf-tab:complete:cd:*" fzf-preview 'lsd -1 --group-dirs first --color=always $realpath'
+eval "$(zoxide init zsh)"
 
 # Safe_source all plugins in the plugins directory
 for plugin in $HOME/.zsh/plugins/*; do
@@ -102,10 +132,3 @@ setopt hist_ignore_dups
 setopt multios
 setopt rm_star_silent
 setopt auto_cd
-
-eval "$(fzf --zsh)"
-zstyle ":fzf-tab:complete:cd:*" fzf-preview 'lsd -1 --group-dirs-first --color=always $realpath'
-eval "$(zoxide init zsh)"
-
-
-

@@ -1,0 +1,8 @@
+.config/configstore
+.config/gcloud
+.config/gh
+.config/gtk*
+.config/htop
+.config/qBitTorrent
+.config/rclone
+.config/rstudio

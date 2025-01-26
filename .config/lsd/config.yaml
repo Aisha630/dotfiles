@@ -1,0 +1,17 @@
+sorting:
+  column: name
+  reverse: false
+  dir-grouping: first
+
+color:
+  when: always
+  theme: custom
+icons:
+  when: always
+  theme: fancy
+  separator: " "
+layout: oneline
+size: short
+hyperlink: always
+no-symlink: false
+symlink-arrow: ⇒
