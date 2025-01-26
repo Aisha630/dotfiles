@@ -4,6 +4,8 @@ function safe_source() {
   [ -f "$1" ] && source "$1"
 }
 
+safe_source $HOME/.zprofile
+
 function copyfile {
   local file="${1}"
   [[ $file = /* ]] || file="$PWD/$file"
@@ -29,16 +31,6 @@ function copypath {
   echo "Absolute path ${file:a} copied to clipboard."
 }
 
-
-safe_source $HOME/.zprofile
-
-# if [ ! -d $HOME/.zsh/plugins ]; then 
-#   mkdir -p $HOME/.zsh && cd $HOME/.zsh
-#   git clone  --filter=blob:none --no-checkout https://github.com/Aisha630/configs.git .
-#   git sparse-checkout init --cone
-#   git sparse-checkout set plugins
-#   git checkout main
-# fi
 
 # the readme for this plugin says to source it before other plugins
 safe_source $HOME/.zsh/plugins/ez-compinit/ez-compinit.plugin.zsh
@@ -89,7 +81,7 @@ alias gs="git status"
 alias ga="git add"
 alias gc="git commit"
 alias gp="git push"
-alias gl="git log"j
+alias gl="git log"
 alias gco="git checkout"
 alias gcb="git checkout -b"
 alias gcm="git commit -m"

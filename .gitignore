@@ -6,3 +6,4 @@
 .config/qBitTorrent
 .config/rclone
 .config/rstudio
+**/.DS_Store
