@@ -7,3 +7,4 @@
 .config/rclone
 .config/rstudio
 **/.DS_Store
+uv*

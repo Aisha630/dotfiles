@@ -97,7 +97,6 @@ alias grh="git reset --hard"
 alias grs="git reset --soft"
 alias gcp="git cherry-pick"
 alias t="tree -L 2"
-alias lst="ls -- tree --depth 2"
 alias src="source"
 alias e="exit"
 
