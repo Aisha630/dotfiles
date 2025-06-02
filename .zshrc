@@ -96,9 +96,14 @@ alias grs="git reset"
 alias grh="git reset --hard"
 alias grs="git reset --soft"
 alias gcp="git cherry-pick"
-alias t="tree -L 2"
+alias tre="tree -L 2"
 alias src="source"
 alias e="exit"
+alias tl="tmux ls"
+alias ta="tmux attach -t"
+alias tn="tmux new -s"
+alias tk="tmux kill-session -t"
+alias tks="tmux kill-server"
 
 neofetch
 

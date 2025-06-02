@@ -1,5 +1,6 @@
 eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(oh-my-posh init zsh --config ~/.config/oh-my-posh-theme/kushal.omp.json)"
+eval "$(oh-my-posh init zsh --config /Users/aisha/.config/oh-my-posh-theme/kushal.omp.json)"
+# tmux -f /Users/aisha/dotfiles/.config/tmux/.tmux.conf
 
 HISTFILE=$HOME/.zsh_history      
 SAVEHIST=100000 

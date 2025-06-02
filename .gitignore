@@ -8,3 +8,5 @@
 .config/rstudio
 **/.DS_Store
 uv*
+.config/tmux/plugins
+**/.vscode
