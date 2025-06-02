@@ -1,4 +1,5 @@
 typeset -U PATH
+
 function safe_source() {
   [ -f "$1" ] && source "$1"
 }
@@ -38,7 +39,6 @@ eval "$(fzf --zsh)"
 zstyle ":fzf-tab:complete:cd:*" fzf-preview 'lsd -1 --group-dirs first --color=always $realpath'
 eval "$(zoxide init zsh)"
 
-# Safe_source all plugins in the plugins directory
 for plugin in $HOME/.zsh/plugins/*; do
   plugin_name=$(basename "$plugin")
   if [[ -d "$plugin" && "$plugin_name" != "zsh-history-substring-search" && "$plugin_name" != "ez-compinit" ]]; then
@@ -68,7 +68,7 @@ function cc() python -c "from math import *; print($*)"
 alias cc="noglob cc"
 alias c="clear"
 alias n="neofetch"
-alias s="kitten ssh"
+alias ss="kitten ssh"
 alias fzf='fzf --preview="bat --color=always {}"'
 alias cpa="copypath"
 alias cf="copyfile"
@@ -102,23 +102,10 @@ alias e="exit"
 
 neofetch
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/homebrew/Caskroom/miniconda/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh" ]; then
-        . "/opt/homebrew/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/homebrew/Caskroom/miniconda/base/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
-
 setopt share_history
 setopt hist_ignore_dups  
 setopt multios
 setopt rm_star_silent
 setopt auto_cd
+setopt NO_NOMATCH
+
