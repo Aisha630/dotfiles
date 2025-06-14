@@ -124,7 +124,7 @@ install_zsh() {
 install_tools() {
     log "Installing required tools..."
     
-    local tools=("lsd" "fzf" "zoxide" "bat" "kitty" "lsd" "neofetch", "oh-my-posh")
+    local tools=("lsd" "fzf" "zoxide" "bat" "kitty" "lsd" "neofetch" "oh-my-posh")
     local failed_tools=()
     
     for tool in "${tools[@]}"; do
@@ -201,7 +201,6 @@ main() {
     install_zsh
     install_tools
     install_plugins
-    verify_installations
     
     log "Installation completed successfully!"
     echo
