@@ -222,7 +222,7 @@
           "properties": {
             "cache_duration": "none"
           },
-          "leading_diamond": "\uf109 ",
+          "leading_diamond": "\uf109  ",
           "template": "{{ if .SSHSession }}{{ end }}{{ .UserName }}",
           "foreground": "#d964a0",
           "type": "session",
