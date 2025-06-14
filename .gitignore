@@ -10,3 +10,4 @@
 uv*
 .config/tmux/plugins
 **/.vscode
+.config/raycast
