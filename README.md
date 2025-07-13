@@ -75,7 +75,15 @@ I chose Zsh for its flexibility and modern features, making it an excellent choi
 
 ---
 
-![My File](https://drive.google.com/uc?export=view&id=1FZAXmt2VturbdY5C8RPmNv73mLExTjTW)![Screenshot](https://drive.google.com/uc?export=view&id=1TWSRzmv2hiZpu4Q5z-doyHypL4yA2XyO)
+![My File](https://drive.google.com/uc?export=view&id=1FZAXmt2VturbdY5C8RPmNv73mLExTjTW)
+
+![File 1](https://drive.google.com/uc?export=view&id=1tTN_riZ0gjUJwHv5juO4mn8SlgOHGvvc)
+
+![File 2](https://drive.google.com/uc?export=view&id=16BCkRdt7mO7OXemUWABViwtn4RNhN9jO)
+
+![File 3](https://drive.google.com/uc?export=view&id=1x_1r28jelCAUFtzc3JP0neb85CZNQYFo)
+
+![File 4](https://drive.google.com/uc?export=view&id=1lVk-yY9lgdV0d-UuaIrDAyVtTkHCabwr)
 
 ## Journey to the Current Setup
 
