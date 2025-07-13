@@ -11,6 +11,8 @@ export EDITOR="nvim"
 export AUTO_NOTIFY_THRESHOLD=10
 export LS_COLORS="di=34:ln=31:so=31:pi=33:ex=31:bd=31:cd=111:su=31:sg=31:tw=31:ow=31:fi=35:*.json=36:*.txt=10:*png=33:*jpg=33:*jpeg=33"
 export HOMEBREW_NO_AUTO_UPDATE=1
+# for better ctrl+t experience 
+export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always {}'"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!

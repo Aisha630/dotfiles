@@ -31,11 +31,11 @@ function copypath {
   echo "Absolute path ${file:a} copied to clipboard."
 }
 
-
 # the readme for this plugin says to source it before other plugins
 safe_source $HOME/.zsh/plugins/ez-compinit/ez-compinit.plugin.zsh
 
 eval "$(fzf --zsh)"
+# make tab completions better
 zstyle ":fzf-tab:complete:cd:*" fzf-preview 'lsd -1 --group-dirs first --color=always $realpath'
 eval "$(zoxide init zsh)"
 
@@ -69,7 +69,7 @@ alias cc="noglob cc"
 alias c="clear"
 alias n="neofetch"
 alias ss="kitten ssh"
-alias fzf='fzf --preview="bat --color=always {}"'
+alias fzf='fzf --preview="bat --style=numbers --color=always {}"'
 alias cpa="copypath"
 alias cf="copyfile"
 alias ls="lsd"

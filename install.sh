@@ -50,6 +50,8 @@ detect_package_manager() {
 
 PKG_MANAGER=$(detect_package_manager)
 
+# add or remove whatever plugins you want to install here. Plugins thorugh ohmyzsh cannot be installed without installing ohmyzsh first afaik. 
+# For such plugins, I recommend just copying them manually from oh my zsh repo and placing them in the plugins directory.
 declare -A plugins=(
     ["auto-notify"]="https://github.com/MichaelAquilina/zsh-auto-notify.git"
     ["ez-compinit"]="https://github.com/mattmc3/ez-compinit.git"
