@@ -75,7 +75,7 @@ I chose Zsh for its flexibility and modern features, making it an excellent choi
 
 ---
 
-![My File](https://drive.google.com/uc?export=view&id=1FZAXmt2VturbdY5C8RPmNv73mLExTjTW)
+![Screenshot](https://drive.google.com/uc?export=view&id=1FZAXmt2VturbdY5C8RPmNv73mLExTjTW)
 
 ![File 1](https://drive.google.com/uc?export=view&id=1tTN_riZ0gjUJwHv5juO4mn8SlgOHGvvc)
 
@@ -243,46 +243,9 @@ If you prefer to install components manually:
 
 ---
 
-### ⚙️ Key Variables
-
-#### Environment
-
-- `HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND`: Customizes the highlight color for history substring matches.
-
 ## What is `.zprofile`?
 
 The `.zprofile` file is executed during the **login** phase of a Zsh shell session. This makes it ideal for setting environment variables and configurations that need to be available globally, even when scripts or non-interactive shell sessions run.
-
-In contrast to `.zshrc`, which is executed for **interactive** shells, `.zprofile` is best suited for login-specific setups.
-
-#### How I Use `.zprofile`
-
-In this configuration, `.zprofile` is used to set:
-
-- **Environment Variables**: Global paths and variables that need to be consistent across sessions.
-- **Initialization Commands**: Commands that should run only once when the shell starts as a login shell.
-- **Custom `ZDOTDIR`**: Redirects Zsh to use a custom directory for its configuration files.
-
-#### Example `.zprofile`:
-
-```zsh
-# Set ZDOTDIR to use a custom configuration directory
-export ZDOTDIR="$HOME/.config/zsh"
-
-# Add custom paths
-export PATH="$HOME/bin:$PATH"
-
-# Initialize environment variables for tools like Homebrew
-if [ -x /opt/homebrew/bin/brew ]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
-
-# Set default editor
-export EDITOR="nvim"
-
-# Load the .zshrc explicitly
-source "$ZDOTDIR/.zshrc"
-```
 
 #### Why Use `.zprofile`?
 
