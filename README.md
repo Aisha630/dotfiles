@@ -17,11 +17,7 @@ This approach keeps my home directory clean and makes it easy to update or remov
 
 If you want to use this method, make sure you have `stow` installed (`brew install stow` on macOS).
 
-To bring this config to any ssh session, we can utilize [xxh](https://github3. **ASCII Art and Color Blocks**:
-
-- Displayed alongside system info for visual appeal
-- Includes custom ASCII art in `ascii.txt` for personalized branding
-- Color-coded sections with distinct hues for different metrics/xxh/xxh.git).
+To bring this config to any ssh session, we can utilize [xxh](https://github.com/xxh/xxh)
 
 ## Repository Structure
 
@@ -79,7 +75,7 @@ I chose Zsh for its flexibility and modern features, making it an excellent choi
 
 ---
 
-![Screenshot](https://drive.google.com/uc?export=view&id=1TWSRzmv2hiZpu4Q5z-doyHypL4yA2XyO)
+![My File](https://drive.google.com/uc?export=view&id=1FZAXmt2VturbdY5C8RPmNv73mLExTjTW)![Screenshot](https://drive.google.com/uc?export=view&id=1TWSRzmv2hiZpu4Q5z-doyHypL4yA2XyO)
 
 ## Journey to the Current Setup
 
