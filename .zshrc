@@ -64,7 +64,7 @@ zle -N edit-command-line
 bindkey "^E" edit-command-line
 
 # Aliases
-function cc() python -c "from math import *; print($*)"
+function cc() python3 -c "from math import *; print($*)"
 alias cc="noglob cc"
 alias c="clear"
 alias n="neofetch"

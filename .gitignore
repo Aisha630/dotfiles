@@ -12,3 +12,4 @@ uv*
 **/.vscode
 .config/raycast
 .config/marimo/
+.config/nvim/
