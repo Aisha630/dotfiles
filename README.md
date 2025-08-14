@@ -39,7 +39,7 @@ To bring this config to any ssh session, we can utilize [xxh](https://github.com
 
 ### Automated Installation
 
-The easiest way to set up this configuration is using the provided installation script:
+The easiest way to set up this configuration is using the provided installation script (requires bash version > 4):
 
 ```bash
 git clone https://github.com/yourusername/dotfiles.git ~/.dotfiles
