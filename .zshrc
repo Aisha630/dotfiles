@@ -51,8 +51,9 @@ done
 # This plugin should be safe_sourced last according to the author. Otherwise, it may not work as expected. Refer to the plugin's README for more information.
 safe_source $HOME/.zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+
 
 zstyle ":completion:*" list-colors ${(s.:.)LS_COLORS}
 zstyle ":completion:*" matcher-list "m:{a-z}={A-Za-z}"
