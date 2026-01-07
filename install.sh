@@ -1,43 +1,43 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-PLUGIN_DIR="$HOME/.zsh/plugins"
-LOG_FILE="$HOME/.zsh_install.log"
+plugin_dir="$HOME/.zsh/plugins"
+log_file="$HOME/.zsh_install.log"
 
-readonly RED='\033[0;31m'
-readonly GREEN='\033[0;32m'
-readonly YELLOW='\033[1;33m'
-readonly BLUE='\033[0;34m'
-readonly NC='\033[0m'
+readonly red='\033[0;31m'
+readonly green='\033[0;32m'
+readonly yellow='\033[1;33m'
+readonly blue='\033[0;34m'
+readonly nc='\033[0m'
 
-log()   { echo -e "${GREEN}[INFO]${NC} $1" | tee -a "$LOG_FILE"; }
-warn()  { echo -e "${YELLOW}[WARN]${NC} $1" | tee -a "$LOG_FILE"; }
-error() { echo -e "${RED}[ERROR]${NC} $1" | tee -a "$LOG_FILE" >&2; }
+log()   { echo -e "${green}[info]${nc} $1" | tee -a "$log_file"; }
+warn()  { echo -e "${yellow}[warn]${nc} $1" | tee -a "$log_file"; }
+error() { echo -e "${red}[error]${nc} $1" | tee -a "$log_file" >&2; }
 
 detect_package_manager() {
-  if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ "$ostype" == "darwin"* ]]; then
     command -v brew >/dev/null && { echo brew; return; }
-    error "Homebrew not found. Please install it first."; exit 1
-  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    error "homebrew not found. please install it first."; exit 1
+  elif [[ "$ostype" == "linux-gnu"* ]]; then
     if   command -v apt   >/dev/null; then echo apt
     elif command -v dnf   >/dev/null; then echo dnf
     elif command -v pacman>/dev/null; then echo pacman
-    else error "No supported package manager found"; exit 1; fi
+    else error "no supported package manager found"; exit 1; fi
   else
-    error "Unsupported OS: $OSTYPE"; exit 1
+    error "unsupported os: $ostype"; exit 1
   fi
 }
 
-PKG_MANAGER=$(detect_package_manager)
+pkg_manager=$(detect_package_manager)
 
 cp -r ./.config ~/
 
 # ---- plugin map ----
-declare -A plugins=(
-  ["auto-notify"]="https://github.com/MichaelAquilina/zsh-auto-notify.git"
+declare -a plugins=(
+  ["auto-notify"]="https://github.com/michaelaquilina/zsh-auto-notify.git"
   ["ez-compinit"]="https://github.com/mattmc3/ez-compinit.git"
   ["fast-syntax-highlighting"]="https://github.com/zdharma-continuum/fast-syntax-highlighting.git"
-  ["fzf-tab"]="https://github.com/Aloxaf/fzf-tab.git"
+  ["fzf-tab"]="https://github.com/aloxaf/fzf-tab.git"
   ["zsh-autosuggestions"]="https://github.com/zsh-users/zsh-autosuggestions.git"
   ["zsh-history-substring-search"]="https://github.com/zsh-users/zsh-history-substring-search.git"
   ["zsh-sudo"]="https://github.com/none9632/zsh-sudo.git"
@@ -49,8 +49,8 @@ install_package() {
     log "$package is already installed"
     return 0
   fi
-  log "Installing $package..."
-  case "$PKG_MANAGER" in
+  log "installing $package..."
+  case "$pkg_manager" in
     brew)
       brew install "$package"
       if [[ "$package" == "fzf" ]]; then
@@ -65,107 +65,107 @@ install_package() {
       sudo dnf install -y "$package"
       ;;
     pacman)
-      sudo pacman -Sy --noconfirm "$package"
+      sudo pacman -sy --noconfirm "$package"
       ;;
-    *) error "Unsupported package manager: $PKG_MANAGER"; return 1;;
+    *) error "unsupported package manager: $pkg_manager"; return 1;;
   esac
 }
 
 install_zsh() {
   if command -v zsh >/dev/null 2>&1; then
-    log "Zsh is already installed"
+    log "zsh is already installed"
     return 0
   fi
-  log "Installing Zsh..."
+  log "installing zsh..."
   install_package zsh
   if command -v zsh >/dev/null 2>&1; then
-    log "Zsh installed successfully!"
-    if [[ "${SHELL:-}" != *"zsh"* ]]; then
-      warn "Zsh is not your default shell. Current shell: ${SHELL:-unknown}"
-      read -p "Set zsh as your default shell? (y/N): " -r
-      if [[ $REPLY =~ ^[Yy]$ ]]; then chsh -s "$(command -v zsh)"; log "Default shell changed to zsh. Restart your terminal."; fi
+    log "zsh installed successfully!"
+    if [[ "${shell:-}" != *"zsh"* ]]; then
+      warn "zsh is not your default shell. current shell: ${shell:-unknown}"
+      read -p "set zsh as your default shell? (y/n): " -r
+      if [[ $reply =~ ^[yy]$ ]]; then chsh -s "$(command -v zsh)"; log "default shell changed to zsh. restart your terminal."; fi
     fi
   else
-    error "Failed to install Zsh"; exit 1
+    error "failed to install zsh"; exit 1
   fi
 }
 
 install_tools() {
-  log "Installing required tools…"
-  local tools=(lsd fzf zoxide bat kitty neofetch neovim tmux)
+  log "installing required tools…"
+  local tools=(lsd fzf zoxide bat neofetch neovim tmux htop fd ripgrep superfile atuin) # TODO: Change fd to fd-find for linux
   local failed=()
   for tool in "${tools[@]}"; do
     if ! install_package "$tool"; then failed+=("$tool"); fi
   done
-  if [[ ${#failed[@]} -gt 0 ]]; then error "Failed to install: ${failed[*]}"; else log "All tools installed successfully!"; fi
+  if [[ ${#failed[@]} -gt 0 ]]; then error "failed to install: ${failed[*]}"; else log "all tools installed successfully!"; fi
 }
 
 clone_tpm() {
-  local tpm_dir="$HOME/.config/tmux/plugins/tpm"
+  local tpm_dir="$home/.config/tmux/plugins/tpm"
   if [[ -d "$tpm_dir" ]]; then
-    log "Tmux Plugin Manager (TPM) already installed"
+    log "tmux plugin manager (tpm) already installed"
     return 0
   fi
-  log "Installing Tmux Plugin Manager (TPM)…"
+  log "installing tmux plugin manager (tpm)…"
   if git clone --quiet https://github.com/tmux-plugins/tpm "$tpm_dir"; then
-    log "TPM installed successfully!"
+    log "tpm installed successfully!"
   else
-    error "Failed to install TPM"; 
+    error "failed to install tpm"; 
   fi
 }
 
 clone_nvchad(){
-  local nvim_config_dir="$HOME/.config/nvim"
+  local nvim_config_dir="$home/.config/nvim"
   if [[ -d "$nvim_config_dir" ]]; then
-    log "NvChad already installed"
+    log "nvchad already installed"
     return 0
   fi
-  log "Installing NvChad…"
-  if git clone --quiet https://github.com/NvChad/NvChad "$nvim_config_dir"; then
-    log "NvChad installed successfully!"
+  log "installing nvchad…"
+  if git clone --quiet https://github.com/nvchad/nvchad "$nvim_config_dir"; then
+    log "nvchad installed successfully!"
   else
-    error "Failed to install NvChad"; 
+    error "failed to install nvchad"; 
   fi  
 }
 
 clone_plugin() {
-  local plugin="$1" repo_url="$2" plugin_path="$PLUGIN_DIR/$plugin"
+  local plugin="$1" repo_url="$2" plugin_path="$plugin_dir/$plugin"
   if [[ -d "$plugin_path" ]]; then
-    log "Plugin '$plugin' exists, updating…"
-    if (cd "$plugin_path" && git pull --quiet); then log "Updated '$plugin'"; else warn "Failed to update '$plugin'"; fi
+    log "plugin '$plugin' exists, updating…"
+    if (cd "$plugin_path" && git pull --quiet); then log "updated '$plugin'"; else warn "failed to update '$plugin'"; fi
     return 0
   fi
-  log "Installing '$plugin' from $repo_url…"
-  if git clone --quiet --depth 1 "$repo_url" "$plugin_path"; then log "Installed '$plugin'"; else error "Failed to install '$plugin'"; return 1; fi
+  log "installing '$plugin' from $repo_url…"
+  if git clone --quiet --depth 1 "$repo_url" "$plugin_path"; then log "installed '$plugin'"; else error "failed to install '$plugin'"; return 1; fi
 }
 
 install_plugins() {
-  log "Creating plugin dir: $PLUGIN_DIR"
-  mkdir -p "$PLUGIN_DIR"
-  log "Installing Zsh plugins…"
+  log "creating plugin dir: $plugin_dir"
+  mkdir -p "$plugin_dir"
+  log "installing zsh plugins…"
   local failed=()
   for plugin in "${!plugins[@]}"; do
     if ! clone_plugin "$plugin" "${plugins[$plugin]}"; then failed+=("$plugin"); fi
   done
-  if [[ ${#failed[@]} -gt 0 ]]; then warn "Failed plugins: ${failed[*]}"; fi
-  log "Plugin installation completed!"
+  if [[ ${#failed[@]} -gt 0 ]]; then warn "failed plugins: ${failed[*]}"; fi
+  log "plugin installation completed!"
 }
 
 main() {
-  log "OS: $OSTYPE"
-  log "Package Manager: $PKG_MANAGER"
-  log "Log file: $LOG_FILE"
+  log "os: $ostype"
+  log "package manager: $pkg_manager"
+  log "log file: $log_file"
 
-  if ! command -v git >/dev/null 2>&1; then error "Git is required but not installed"; exit 1; fi
+  if ! command -v git >/dev/null 2>&1; then error "git is required but not installed"; exit 1; fi
 
   install_zsh
   install_tools
   install_plugins
 
-  log "Installation completed successfully!"
+  log "installation completed successfully!"
   echo
-  echo -e "${GREEN}Next steps:${NC}"
-  echo "1) Restart your terminal OR run: exec zsh"
+  echo -e "${green}next steps:${nc}"
+  echo "1) restart your terminal or run: exec zsh"
 }
 
 main "$@"

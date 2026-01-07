@@ -1,4 +1,6 @@
 typeset -U PATH
+bindkey -e # emac bindings
+autoload zmv # makes moving files better
 
 function safe_source() {
   [ -f "$1" ] && source "$1"
@@ -68,8 +70,8 @@ safe_source $HOME/.zsh/plugins/zsh-history-substring-search/zsh-history-substrin
 
 bindkey "^[[A" history-substring-search-up
 bindkey "^[[B" history-substring-search-down
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
+# bindkey "$terminfo[kcuu1]" history-substring-search-up
+# bindkey "$terminfo[kcud1]" history-substring-search-down
 
 # completion settings
 zstyle ":completion:*" list-colors ${(s.:.)LS_COLORS}
@@ -131,11 +133,14 @@ setopt rm_star_silent
 setopt auto_cd
 setopt NO_NOMATCH
 setopt HIST_REDUCE_BLANKS
+setopt HIST_EXPAND
+setopt HIST_VERIFY
 
 HISTFILE=$HOME/.zsh_history      
 SAVEHIST=100000 
 HISTSIZE=5000
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=yellow,fg=black,bold'
+UNDO_LIMIT_NO=40
 
 if command -v nvim >/dev/null; then
   export EDITOR=nvim
@@ -148,7 +153,12 @@ fi
 export AUTO_NOTIFY_THRESHOLD=10
 export LS_COLORS="di=34:ln=31:so=31:pi=33:ex=31:bd=31:cd=111:su=31:sg=31:tw=31:ow=31:fi=35:*.json=36:*.txt=10:*png=33:*jpg=33:*jpeg=33"
 export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always {}'"
-
+export ATUIN_NOBIND="true"
+eval "$(atuin init zsh)"
+bindkey '^r' atuin-up-search-viins
+bindkey ' ' magic-space
+bindkey '^[/' undo      # Alt + /
+bindkey '^[?' redo      # Alt + Shift + /
 safe_source $HOME/.zsh/local.zsh
 
 neofetch
