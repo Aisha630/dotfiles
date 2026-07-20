@@ -13,3 +13,4 @@ uv*
 .config/raycast
 .config/marimo/
 .config/nvim/
+.config/kitty/ssh-secrets.conf
