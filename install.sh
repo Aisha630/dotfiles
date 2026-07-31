@@ -1,39 +1,46 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# run from the repo root regardless of where this was invoked from
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 plugin_dir="$HOME/.zsh/plugins"
 log_file="$HOME/.zsh_install.log"
 
 readonly red='\033[0;31m'
 readonly green='\033[0;32m'
 readonly yellow='\033[1;33m'
-readonly blue='\033[0;34m'
 readonly nc='\033[0m'
 
 log()   { echo -e "${green}[info]${nc} $1" | tee -a "$log_file"; }
 warn()  { echo -e "${yellow}[warn]${nc} $1" | tee -a "$log_file"; }
 error() { echo -e "${red}[error]${nc} $1" | tee -a "$log_file" >&2; }
 
+# declare -A needs bash 4+ and macos ships 3.2; keep everything above this check 3.2-safe
+if [[ -z "${BASH_VERSINFO[0]:-}" ]] || (( BASH_VERSINFO[0] < 4 )); then
+  error "bash 4+ is required, found ${BASH_VERSION:-unknown}"
+  error "macos ships bash 3.2 as /bin/bash. install a newer one and re-run:"
+  error "  brew install bash && exec \$(brew --prefix)/bin/bash $0"
+  exit 1
+fi
+
 detect_package_manager() {
-  if [[ "$ostype" == "darwin"* ]]; then
+  if [[ "$OSTYPE" == "darwin"* ]]; then
     command -v brew >/dev/null && { echo brew; return; }
     error "homebrew not found. please install it first."; exit 1
-  elif [[ "$ostype" == "linux-gnu"* ]]; then
+  elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
     if   command -v apt   >/dev/null; then echo apt
     elif command -v dnf   >/dev/null; then echo dnf
     elif command -v pacman>/dev/null; then echo pacman
     else error "no supported package manager found"; exit 1; fi
   else
-    error "unsupported os: $ostype"; exit 1
+    error "unsupported os: $OSTYPE"; exit 1
   fi
 }
 
 pkg_manager=$(detect_package_manager)
 
-cp -r ./.config ~/
-
-# ---- plugin map ----
-declare -a plugins=(
+declare -A plugins=(
   ["auto-notify"]="https://github.com/michaelaquilina/zsh-auto-notify.git"
   ["ez-compinit"]="https://github.com/mattmc3/ez-compinit.git"
   ["fast-syntax-highlighting"]="https://github.com/zdharma-continuum/fast-syntax-highlighting.git"
@@ -43,29 +50,62 @@ declare -a plugins=(
   ["zsh-sudo"]="https://github.com/none9632/zsh-sudo.git"
 )
 
+# the binary a package provides, when it differs from the package name
+command_for() {
+  case "$1" in
+    neovim)    echo nvim ;;
+    ripgrep)   echo rg   ;;
+    superfile) echo spf  ;;
+    *)         echo "$1" ;;
+  esac
+}
+
+# packages that are named differently outside homebrew
+package_for() {
+  local package="$1"
+  case "$pkg_manager:$package" in
+    apt:fd|dnf:fd) echo fd-find ;;
+    apt:bat)       echo batcat  ;;
+    *)             echo "$package" ;;
+  esac
+}
+
+install_config() {
+  log "copying .config into ${HOME}…"
+  local backup="$HOME/.config.backup.$(date +%Y%m%d%H%M%S)"
+  if [[ -d "$HOME/.config" ]]; then
+    log "backing up existing ~/.config to $backup"
+    cp -r "$HOME/.config" "$backup"
+  fi
+  cp -r ./.config "$HOME/"
+  log "config copied"
+}
+
 install_package() {
   local package="$1"
-  if command -v "$package" >/dev/null 2>&1; then
+  local binary; binary=$(command_for "$package")
+  if command -v "$binary" >/dev/null 2>&1; then
     log "$package is already installed"
     return 0
   fi
-  log "installing $package..."
+  local pkg; pkg=$(package_for "$package")
+  log "installing $pkg..."
   case "$pkg_manager" in
     brew)
-      brew install "$package"
+      brew install "$pkg"
       if [[ "$package" == "fzf" ]]; then
         "$(brew --prefix)/opt/fzf/install" --all --no-bash --no-fish
       fi
       ;;
     apt)
       sudo apt update
-      sudo apt install -y "$package"
+      sudo apt install -y "$pkg"
       ;;
     dnf)
-      sudo dnf install -y "$package"
+      sudo dnf install -y "$pkg"
       ;;
     pacman)
-      sudo pacman -sy --noconfirm "$package"
+      sudo pacman -Sy --noconfirm "$pkg"
       ;;
     *) error "unsupported package manager: $pkg_manager"; return 1;;
   esac
@@ -80,10 +120,10 @@ install_zsh() {
   install_package zsh
   if command -v zsh >/dev/null 2>&1; then
     log "zsh installed successfully!"
-    if [[ "${shell:-}" != *"zsh"* ]]; then
-      warn "zsh is not your default shell. current shell: ${shell:-unknown}"
+    if [[ "${SHELL:-}" != *"zsh"* ]]; then
+      warn "zsh is not your default shell. current shell: ${SHELL:-unknown}"
       read -p "set zsh as your default shell? (y/n): " -r
-      if [[ $reply =~ ^[yy]$ ]]; then chsh -s "$(command -v zsh)"; log "default shell changed to zsh. restart your terminal."; fi
+      if [[ $REPLY =~ ^[Yy]$ ]]; then chsh -s "$(command -v zsh)"; log "default shell changed to zsh. restart your terminal."; fi
     fi
   else
     error "failed to install zsh"; exit 1
@@ -92,7 +132,7 @@ install_zsh() {
 
 install_tools() {
   log "installing required tools…"
-  local tools=(lsd fzf zoxide bat neofetch neovim tmux htop fd ripgrep superfile atuin) # TODO: Change fd to fd-find for linux
+  local tools=(lsd fzf zoxide bat neofetch neovim tmux htop fd ripgrep superfile)
   local failed=()
   for tool in "${tools[@]}"; do
     if ! install_package "$tool"; then failed+=("$tool"); fi
@@ -101,7 +141,7 @@ install_tools() {
 }
 
 clone_tpm() {
-  local tpm_dir="$home/.config/tmux/plugins/tpm"
+  local tpm_dir="$HOME/.config/tmux/plugins/tpm"
   if [[ -d "$tpm_dir" ]]; then
     log "tmux plugin manager (tpm) already installed"
     return 0
@@ -110,32 +150,34 @@ clone_tpm() {
   if git clone --quiet https://github.com/tmux-plugins/tpm "$tpm_dir"; then
     log "tpm installed successfully!"
   else
-    error "failed to install tpm"; 
+    error "failed to install tpm";
   fi
 }
 
 clone_nvchad(){
-  local nvim_config_dir="$home/.config/nvim"
+  local nvim_config_dir="$HOME/.config/nvim"
   if [[ -d "$nvim_config_dir" ]]; then
     log "nvchad already installed"
     return 0
   fi
   log "installing nvchad…"
-  if git clone --quiet https://github.com/nvchad/nvchad "$nvim_config_dir"; then
+  if git clone --quiet https://github.com/NvChad/NvChad "$nvim_config_dir"; then
     log "nvchad installed successfully!"
   else
-    error "failed to install nvchad"; 
-  fi  
+    error "failed to install nvchad";
+  fi
 }
 
 clone_plugin() {
-  local plugin="$1" repo_url="$2" plugin_path="$plugin_dir/$plugin"
+  local plugin="$1"
+  local repo_url="$2"
+  local plugin_path="$plugin_dir/$plugin"
   if [[ -d "$plugin_path" ]]; then
     log "plugin '$plugin' exists, updating…"
     if (cd "$plugin_path" && git pull --quiet); then log "updated '$plugin'"; else warn "failed to update '$plugin'"; fi
     return 0
   fi
-  log "installing '$plugin' from $repo_url…"
+  log "installing '$plugin' from ${repo_url}…"
   if git clone --quiet --depth 1 "$repo_url" "$plugin_path"; then log "installed '$plugin'"; else error "failed to install '$plugin'"; return 1; fi
 }
 
@@ -144,6 +186,7 @@ install_plugins() {
   mkdir -p "$plugin_dir"
   log "installing zsh plugins…"
   local failed=()
+  local plugin
   for plugin in "${!plugins[@]}"; do
     if ! clone_plugin "$plugin" "${plugins[$plugin]}"; then failed+=("$plugin"); fi
   done
@@ -152,7 +195,7 @@ install_plugins() {
 }
 
 main() {
-  log "os: $ostype"
+  log "os: $OSTYPE"
   log "package manager: $pkg_manager"
   log "log file: $log_file"
 
@@ -160,7 +203,10 @@ main() {
 
   install_zsh
   install_tools
+  install_config
   install_plugins
+  clone_tpm
+  clone_nvchad
 
   log "installation completed successfully!"
   echo
