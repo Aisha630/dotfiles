@@ -1,4 +1,3 @@
-typeset -U PATH
 bindkey -e # emac bindings
 autoload zmv # makes moving files better
 
@@ -90,7 +89,6 @@ alias cc="noglob cc"
 alias c="clear"
 alias n="neofetch"
 alias ss="kitten ssh"
-alias fzf='fzf --preview="bat --style=numbers --color=always {}"'
 alias cpa="copypath"
 alias cf="copyfile"
 alias ls="lsd"
@@ -126,15 +124,15 @@ alias tn="tmux new -s"
 alias tk="tmux kill-session -t"
 alias tks="tmux kill-server"
 
-setopt share_history
-setopt hist_ignore_dups  
-setopt multios
-setopt rm_star_silent
-setopt auto_cd
-setopt NO_NOMATCH
-setopt HIST_REDUCE_BLANKS
-setopt HIST_EXPAND
-setopt HIST_VERIFY
+setopt share_history      # import + append history live, so all open shells share one list
+setopt hist_ignore_dups   # skip a command if it repeats the one before it
+setopt multios            # implicit tee/cat on multiple redirections (> a > b)
+setopt rm_star_silent     # don't ask for confirmation on `rm *`
+setopt auto_cd            # a bare directory name cd's into it
+setopt NO_NOMATCH         # leave a glob with no matches as-is instead of erroring
+setopt HIST_REDUCE_BLANKS # strip superfluous whitespace before saving to history
+setopt HIST_EXPAND        # bash-compat alias for BANG_HIST (!! expansion) -- already zsh default
+setopt HIST_VERIFY        # after a ! expansion, reload the line for editing instead of running it
 
 HISTFILE=$HOME/.zsh_history      
 SAVEHIST=100000 
@@ -142,20 +140,9 @@ HISTSIZE=5000
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=yellow,fg=black,bold'
 UNDO_LIMIT_NO=40
 
-if command -v nvim >/dev/null; then
-  export EDITOR=nvim
-elif command -v vim >/dev/null; then
-  export EDITOR=vim
-else
-  export EDITOR=vi
-fi
-
-export AUTO_NOTIFY_THRESHOLD=10
-export LS_COLORS="di=34:ln=31:so=31:pi=33:ex=31:bd=31:cd=111:su=31:sg=31:tw=31:ow=31:fi=35:*.json=36:*.txt=10:*png=33:*jpg=33:*jpeg=33"
-export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always {}'"
 bindkey ' ' magic-space
 bindkey '^[/' undo      # Alt + /
 bindkey '^[?' redo      # Alt + Shift + /
-safe_source $HOME/.zsh/local.zsh
+safe_source $HOME/.zsh/local.zsh # machine-specific setup, untracked
 
 neofetch
