@@ -3,8 +3,6 @@
 typeset -U PATH path # dedupe PATH in every shell, not just interactive ones
 
 # non-login shells never read .zprofile, so homebrew would be absent from them
-# entirely. .zprofile still needs its own brew shellenv: /etc/zprofile runs
-# path_helper after this file and demotes /opt/homebrew/bin behind /usr/bin.
 [[ -d /opt/homebrew/bin ]] && path=(/opt/homebrew/bin /opt/homebrew/sbin $path)
 
 if command -v nvim >/dev/null; then
