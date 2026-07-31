@@ -180,45 +180,6 @@ Emacs bindings are active (`bindkey -e`).
   so the file can actually reach the configured size.
 - `EDITOR` prefers `nvim`, then `vim`, then `vi`.
 
-## Troubleshooting
-
-**Slow startup.** Time it with `for i in 1 2 3; do time zsh -i -c exit; done`.
-The usual culprits are `eval "$(some-tool completion)"` calls, each of which forks
-a process and parses a script on every single shell. Cache the output to a file
-once, `zcompile` it, and `source` that instead, regenerating only when the tool's
-binary is newer than the cache. The fetch tool at the end of `.zshrc` also costs
-real time on every shell, including each new tmux pane. To find where the time
-actually goes, add `zmodload zsh/zprof` at the top of `.zshrc` and `zprof` at the
-bottom.
-
-**Slow prompt in a large repo.** The Oh My Posh git segment needs
-`"fetch_status": true` to report ahead/behind, and that scans the working tree, so
-its cost scales with file count. In a 12,000-file repo it adds roughly 70 ms per
-prompt. Enabling git's filesystem monitor cuts that by about two thirds while
-keeping the indicators:
-
-```bash
-git config --global core.fsmonitor true
-git config --global core.untrackedCache true
-```
-
-**Prompt shows no git status.** The git segment renders only what its `template`
-references. `.BranchStatus` reports commits relative to upstream, not file edits:
-`≡` means in sync, `↑2` and `↓2` mean ahead and behind. Working-tree edits live in
-`.Working` and `.Staging`, which this theme deliberately omits.
-
-**Plugin features missing.** Confirm the directories exist under
-`~/.zsh/plugins/` and re-run `./install.sh`, which pulls updates for plugins that
-are already cloned.
-
-**`ls` output looks wrong.** Confirm `lsd` is installed, since `ls` is aliased to it.
-
-**Glyphs render as boxes.** The prompt and `lsd` icons need a Nerd Font. This setup
-uses MesloLGS Nerd Font Mono, set in `kitty.conf`.
-
-**`install.sh` exits immediately.** Check the bash version. See
-[Requirements](#requirements).
-
 ## Layout
 
 ```
