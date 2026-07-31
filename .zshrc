@@ -47,6 +47,11 @@ function copypath {
   fi
 }
 
+# mkdir and cd into it in one step
+function mkcd(){
+  mkdir -p "$1" && cd "$1"
+}
+
 # the readme for this plugin says to source it before other plugins
 safe_source $HOME/.zsh/plugins/ez-compinit/ez-compinit.plugin.zsh
 
@@ -92,7 +97,9 @@ alias ss="kitten ssh"
 alias cpa="copypath"
 alias cf="copyfile"
 alias ls="lsd"
+alias l="ls"
 alias la="ls -la"
+alias rm="rm -i" # prompt before each removal; -rf still bypasses this
 alias ..="cd .."
 alias ...="cd ../.."
 alias gs="git status"
@@ -124,6 +131,7 @@ alias tn="tmux new -s"
 alias tk="tmux kill-session -t"
 alias tks="tmux kill-server"
 
+setopt DOT_GLOB           # globs match hidden files too -- note this widens `rm *`
 setopt share_history      # import + append history live, so all open shells share one list
 setopt hist_ignore_dups   # skip a command if it repeats the one before it
 setopt multios            # implicit tee/cat on multiple redirections (> a > b)
@@ -134,9 +142,9 @@ setopt HIST_REDUCE_BLANKS # strip superfluous whitespace before saving to histor
 setopt HIST_EXPAND        # bash-compat alias for BANG_HIST (!! expansion) -- already zsh default
 setopt HIST_VERIFY        # after a ! expansion, reload the line for editing instead of running it
 
-HISTFILE=$HOME/.zsh_history      
-SAVEHIST=100000 
-HISTSIZE=5000
+HISTFILE=$HOME/.zsh_history
+SAVEHIST=100000 # events kept in the history file
+HISTSIZE=100000 # events kept in memory; must be >= SAVEHIST or the file is capped to this
 HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=yellow,fg=black,bold'
 UNDO_LIMIT_NO=40
 
