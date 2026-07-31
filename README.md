@@ -82,13 +82,21 @@ usual cause of "it works in my terminal but not in scripts":
 
 | File | Read by | Holds |
 | --- | --- | --- |
-| `.zshenv` | every zsh, including scripts and `zsh -c` | `PATH` dedup, `EDITOR`, `LS_COLORS`, fzf command vars |
+| `.zshenv` | every zsh, including scripts and `zsh -c` | `PATH` dedup, Homebrew `PATH`, `EDITOR`, `LS_COLORS`, fzf command vars |
 | `.zprofile` | login shells only | login-time setup, e.g. Homebrew `shellenv` |
 | `.zshrc` | interactive shells | plugins, aliases, keybindings, completion, history, `setopt` |
 | `~/.zsh/local.zsh` | sourced at the end of `.zshrc` | per-machine paths, toolchains, secrets |
 
 `EDITOR` lives in `.zshenv` specifically so `git` and `sudoedit` inherit it when
 invoked non-interactively. Anything interactive-only belongs in `.zshrc`.
+
+`.zshenv` prepends `/opt/homebrew/bin` itself, which looks redundant against the
+`brew shellenv` in `.zprofile` but is not. Non-login shells never read
+`.zprofile`, so without it a `zsh -c` sees no Homebrew binaries at all — and
+`EDITOR` would fall through to `vim`, since `nvim` is Homebrew-only. The
+`.zprofile` line is still required: `/etc/zprofile` runs `path_helper` *after*
+`.zshenv` and demotes `/opt/homebrew/bin` behind `/usr/bin`, so login shells
+need it re-prepended, and it also sets `HOMEBREW_PREFIX` and `MANPATH`.
 
 `~/.zsh/local.zsh` and `.zprofile` are deliberately not tracked here. `local.zsh`
 is sourced at the end of `.zshrc` if it exists, and is the escape hatch for
