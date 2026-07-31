@@ -141,14 +141,13 @@
             "branch_icon": "\ue725 ",
             "fetch_status": true
           },
-          "template": " {{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }}  {{ .Staging.String }}{{ end }} ",
+          "template": " {{ .HEAD }}{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }} ",
           "foreground": "#011627",
           "powerline_symbol": "\ue0b0",
           "background": "#E493B3",
           "type": "git",
           "style": "powerline",
           "background_templates": [
-            "{{ if or (.Working.Changed) (.Staging.Changed) }}#8ACDD7{{ end }}",
             "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#8ACDD7{{ end }}",
             "{{ if gt .Ahead 0 }}#FFEFEF{{ end }}",
             "{{ if gt .Behind 0 }}#FFEFEF{{ end }}"
