@@ -132,7 +132,7 @@ install_zsh() {
 
 install_tools() {
   log "installing required tools…"
-  local tools=(lsd fzf zoxide bat neofetch neovim tmux htop fd ripgrep superfile)
+  local tools=(lsd fzf zoxide bat fastfetch neovim tmux htop fd ripgrep superfile)
   local failed=()
   for tool in "${tools[@]}"; do
     if ! install_package "$tool"; then failed+=("$tool"); fi

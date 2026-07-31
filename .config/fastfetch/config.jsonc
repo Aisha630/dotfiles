@@ -1,0 +1,74 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "data",
+    "source": "       ▄       ▄\n      ▄ ▀▄   ▄▀ ▄\n      █▄█▀███▀█▄█\n      ▀█████████▀\n       ▄▀     ▀▄",
+    "color": {
+      "1": "white"
+    },
+    "padding": {
+      "top": 2,
+      "right": 3
+    }
+  },
+  "display": {
+    "separator": " : ",
+    "key": {
+      "width": 17
+    },
+    "percent": {
+      "type": 1
+    },
+    "size": {
+      "binaryPrefix": "iec",
+      "ndigits": 1
+    },
+    "color": {
+      "keys": "magenta",
+      "title": "38;5;128",
+      "output": "38;5;39",
+      "separator": "magenta"
+    }
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "format": "{#1;38;5;128}  Sys-Info{#}"
+    },
+    {
+      "type": "custom",
+      "format": " {#31}├────{#32}────{#33}────{#34}────{#35}────{#36}────{#37}────{#38;5;8}──{#}"
+    },
+    {
+      "type": "os",
+      "key": " ├─  Distro ",
+      "format": "{name} {version} {build-id}"
+    },
+    {
+      "type": "shell",
+      "key": " ├─  Shell  "
+    },
+    {
+      "type": "cpu",
+      "key": " ├─ 󰍛 CPU    ",
+      "format": "{name} ({cores-logical})"
+    },
+    {
+      "type": "memory",
+      "key": " ├─  Memory "
+    },
+    {
+      "type": "battery",
+      "key": " ├─  Battery",
+      "format": "{capacity}"
+    },
+    {
+      "type": "uptime",
+      "key": " ├─ 󰅐 Up Time"
+    },
+    {
+      "type": "custom",
+      "format": " {#38;5;9}└────{#38;5;10}────{#38;5;11}────{#38;5;12}────{#38;5;13}────{#38;5;14}────{#38;5;15}────{#38;5;16}──{#}"
+    }
+  ]
+}

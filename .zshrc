@@ -92,7 +92,7 @@ bindkey "^E" edit-command-line
 function cc() python3 -c "from math import *; print($*)"
 alias cc="noglob cc"
 alias c="clear"
-alias n="neofetch"
+alias n="fastfetch"
 alias ss="kitten ssh"
 alias cpa="copypath"
 alias cf="copyfile"
@@ -153,4 +153,4 @@ bindkey '^[/' undo      # Alt + /
 bindkey '^[?' redo      # Alt + Shift + /
 safe_source $HOME/.zsh/local.zsh # machine-specific setup, untracked
 
-neofetch
+fastfetch
