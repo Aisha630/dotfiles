@@ -228,7 +228,7 @@
       "alignment": "left",
       "segments": [
         {
-          "template": "\n╭─",
+          "template": "╭─",
           "foreground": "#D6DEEB",
           "type": "text",
           "style": "plain",
